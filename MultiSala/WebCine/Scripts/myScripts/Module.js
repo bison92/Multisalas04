@@ -223,8 +223,8 @@ var Module = (function (_my) {
                 if (actualAction.handlers != null && actualAction.handlers.length != 0) {
                     for (var i = 0; i < actualAction.handlers.length; i++) {
                         var idboton = $(actualAction.botones[i]).attr("id");
-                        console.log(idboton);
-                        console.log(actualAction.handlers[i]);
+                        //console.log(idboton);
+                        //console.log(actualAction.handlers[i]);
                         $("#" + idboton).click(actualAction.handlers[i]);
                     }
                 }

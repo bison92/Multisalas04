@@ -11,7 +11,7 @@
     _my.states["ConfirmarDevolucion"] = {
         title: "Venta Devuelta",
         botones: [_my.botones.btnvolver, _my.botones.btncomprar],
-        handlers: [function () { _my.handlers.cargaIndex(); }, function () { _my.rutas.venderPedirDatos(); }, ],
+        handlers: [function () { _my.rutas.Index(); }, function () { _my.rutas.venderPedirDatos(); }, ],
         hidden: [true, true, true, true],
         disabled: [true, true, true, true, true],
     };
