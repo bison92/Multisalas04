@@ -316,7 +316,7 @@ namespace Cine
 
             using (var context = new DatosDB())
             {
-                resultado = context.Database.SqlQuery<int>("select sum(v.NEntradas) as totalVentas from Ventas as v,Sesions s,Salas sl where s.SalaID=sl.SalaID and v.SesionID=s.ID and s.fecha between  convert(datetime,@dateI) and convert(datetime,@dateF) and s.ID=@idSesion group by s.ID", new SqlParameter("dateI", fechaInicio), new SqlParameter("dateF", fechaFin), new SqlParameter("idSesion", idSesion)).FirstOrDefault();
+                resultado = context.Database.SqlQuery<int>("select sum(v.NEntradas) as totalVentas from Ventas as v,Sesions s,Salas sl where s.SalaId=sl.SalaId and v.SesionId=s.SesionId and s.fecha between  convert(datetime,@dateI) and convert(datetime,@dateF) and s.SesionId=@idSesion group by s.SesionId", new SqlParameter("dateI", fechaInicio), new SqlParameter("dateF", fechaFin), new SqlParameter("idSesion", idSesion)).FirstOrDefault();
             }
             return resultado;
         }

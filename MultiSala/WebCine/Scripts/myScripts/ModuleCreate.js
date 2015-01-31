@@ -40,6 +40,12 @@
             type: "get",
             url: "/api/venta/entradasDisponibles/" + sesionId,
         });
+    };
+    var validaSesionAbierta = function (sesionId) {
+        return $.ajax({
+            type: "get",
+            url: "/api/sesion/" + sesionId,
+        });
     }
     // estados, 2a pantalla de venta.
     _my.states.confirmarVenta = {
@@ -55,14 +61,15 @@
         $("#btncomprar").attr("disabled", true);
         var model = _my.helpers.cargaVentas();
         if (validaFormulario(model)) {
-            $.when(validaButacas(model.NEntradas, model.SesionId)).then(function (data) {
+            $.when(validaSesionAbierta(model.SesionId), validaButacas(model.NEntradas, model.SesionId))
+                .then([function (data) {
                 if (Number(data) < model.NEntradas) {
                     alert("No hay suficientes butacas disponibles para la sesión solicitada");
                 } else {
                     model.Precio = calculaPrecio(model);
                     _my.render('venta', 'confirmarVenta', model, _my.helpers.descargaVentas);
                 }
-            });
+            }, function (data) { }]);
         }
     };
     _my.handlers.corregirVenta = function () {

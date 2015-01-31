@@ -1,0 +1,1 @@
+﻿select sum(v.precio) as totalVentas from Ventas as v,Sesions s,Salas sl where s.SalaID=sl.SalaID and v.SesionID=s.ID and s.fecha between  convert(datetime,@dateI) and convert(datetime,@dateF)

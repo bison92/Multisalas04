@@ -1,9 +1,5 @@
 ﻿
 var Module = (function (_my) {
-    var isFunction = function(functionToCheck) {
-        var getType = {};
-        return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
-    }
     _my.listadoSesiones = new Array();
     $.ajax('/api/sesion', {
         success: function (data) {
@@ -224,7 +220,7 @@ var Module = (function (_my) {
             var htmlFinal = source.html();
             $("#main").html(htmlFinal);
             if (dataorcb) {
-                if (!isFunction(dataorcb)) {
+                if (!_.isFunction(dataorcb)) {
                     if (dataorcb.Precio) {
                         dataorcb.Precio = Number(dataorcb.Precio).toFixed(2)+"€";
                     }

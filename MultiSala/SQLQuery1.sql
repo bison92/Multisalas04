@@ -1,0 +1,1 @@
+﻿INSERT INTO ventas VALUES(1,2,1,14);
