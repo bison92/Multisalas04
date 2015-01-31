@@ -218,11 +218,13 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ISesionController.cs" />
+    <Compile Include="Controllers\IStatusController.cs" />
     <Compile Include="Controllers\IValuesController.cs" />
     <Compile Include="Controllers\IVentaController.cs" />
     <Compile Include="Controllers\SesionController.cs" />
     <Compile Include="Controllers\UnityContainerFactory.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\VentaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

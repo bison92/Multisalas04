@@ -1,5 +1,27 @@
 ﻿
 var Module = (function (_my) {
+    // Constantes object 
+    _my.Constantes = {};
+    _my.Constantes.url = "/api/status"
+    _my.Constantes.Precio = 0;
+    _my.Constantes.DescuentoHumbral = 0;
+    _my.Constantes.DescuentoGrupo = 0;
+    _my.Constantes.DescuentoGrupoJoven = 0;
+    _my.Constantes.loadStatus = function () {
+        $.ajax({
+            url: _my.Constantes.url,
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                for (property in data) {
+                    console.log(property);
+                    if (_my.Constantes.hasOwnProperty(property.toString())) {
+                        _my.Constantes[property.toString()] = data[property];
+                    }
+                }
+            },
+        });
+    };
     // botones    
     _my.botones = {};
     _my.botones["btndevolucionventa"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-devolucion-venta\">Devolver</button>";
@@ -13,8 +35,18 @@ var Module = (function (_my) {
     _my.botones["btnconfirmarcambio"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-confirmarcambio\">ConfirmarCambio</button>";
     _my.botones["btnconfirmardevolucion"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-confirmardevolucion\">ConfirmarDevolucion</button>";
     _my.botones["btnversesion"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-versesion\">VerSesion</button>";
-    // estados
-    // estados
+
+    // State Object (Estado)
+    // contienen la información que necesita render para pintar cada estado en un formulario o fragmento html.
+    // cada estado es un objeto con la siguientes propiedades:
+    //  + title: String, el título de la página.
+    //  
+    //  + botones : Array of HTMLString, listado ordenado de botones que tiene la vista.
+    //  + handlers : Array of FunctionHandlers, listado ordenado de funciones (event handlers) que se disparan 
+    //               cuando se hace click en los botones definidos.
+    //// !! Para asociar el botón al event handler utilizamos su posición en el array, que ha de ser la misma.
+    //// 
+
     _my.states = {};
     _my.states["home"] = {
         title: "CyC",
@@ -22,43 +54,65 @@ var Module = (function (_my) {
 
     _my.states["venderPedirDatos"] = {
         title: "Crear venta",
-        botones: [_my.botones.btncomprar, _my.botones.btnlimpiar, _my.botones.btnvolver],
+        hidden : [false, false, false, false, false],
         disabled: [true, false, false, false, true],
-        handlers: [function () { _my.handlers.comprobarVenta(); }],
+        botones: [
+            _my.botones.btncomprar,
+            _my.botones.btnlimpiar,
+            _my.botones.btnvolver,
+        ],
+        handlers: [
+            function () {
+                _my.handlers.comprobarVenta();
+            },
+            function () {
+                _my.handlers.resetForm();
+            },
+        ],
     }
     _my.states["cambioDevolucionPedirDatos"] = {
         title: "Modificar venta",
-        botones: [_my.botones.btndevolucionventa, _my.botones.btncambiar, _my.botones.btnvolver, _my.botones.btncomprar],
-        handlers: [function () {  _my.handlers.CargarCrearDevolucion(); }],
+        botones: [
+            _my.botones.btndevolucionventa,
+            _my.botones.btncambiar,
+            _my.botones.btnvolver,
+            _my.botones.btncomprar,
+        ],
+        handlers: [
+            function () {
+                _my.handlers.CargarCrearDevolucion();
+            },
+        ],
     };
     _my.states["seleccionaSesion"] = {
         title: "Seleccione la Sesion",
         botones: [_my.botones.btnversesion, _my.botones.btnvolver],
-        handlers: [function () {_my.handlers.SeleccionaSesion(); }, function () {_my.handlers.volveralprincipio()}],
-    }
-   
-    _my.cargaIndex = function () {
+        handlers: [function () { _my.handlers.SeleccionaSesion(); }, function () { _my.handlers.volveralprincipio() }],
+    };
+    // handlers 
+    // namespace para los
 
-        this.render('home', 'home', null, null, function () {
+    _my.handlers = {};
+
+    _my.handlers.volveralprincipio = function () {
+        $("#actions").html("");
+         _my.handlers.cargaIndex();
+     
+    }
+
+
+    
+
+    _my.handlers.cargaIndex = function () {
+
+        _my.render('home', 'home', function () {
             $("#btn-create-venta").click(_my.rutas.venderPedirDatos);
             $("#btn-cambia-venta").click(_my.rutas.cambioDevolucionPedirDatos);
             $("#btn-listado-sesiones").click(_my.rutas.seleccionaSesion);
         });
     };
 
-    // handlers 
-
-    _my.handlers = {};
-
-    _my.handlers.volveralprincipio = function () {
-        $("#actions").html("");
-         _my.cargaIndex();
-     
-    }
-
-
     // rutas 
-    
     _my.rutas = {};
 
     _my.rutas["venderPedirDatos"] = function () {
@@ -72,25 +126,25 @@ var Module = (function (_my) {
         _my.render('seleccionaSesion', 'seleccionaSesion');
     }
 
-    // cargadores / descargadores
+    // helpers, aquí metemos los cargadores y descargadores.
 
     _my.helpers = {};
-    _my.helpers.descargaVentas = function (data) {
-        $("#ventaid").val(data.ID),
-        $("#sesionid").val(data.SesionID),
-        $("#nentradas").val(data.NEntradas),
-        $("#nentradasjoven").val(data.NEntradasJoven),
-        $("#precio").val(data.Precio)
+    _my.helpers.descargaVentas = function (venta) {
+        $("#ventaid").val(venta.ID),
+        $("#sesionid").val(venta.SesionID),
+        $("#nentradas").val(venta.NEntradas),
+        $("#nentradasjoven").val(venta.NEntradasJoven),
+        $("#precio").val(venta.Precio)
     };
     _my.helpers.cargaVentas = function () {
-        var objeto = {
+        var venta = {
             ID: $("#ventaid").val(),
             SesionID: $("#sesionid").val(),
             NEntradas: $("#nentradas").val(),
             NEntradasJoven: $("#nentradasjoven").val(),
             Precio: $("#precio").val(),
         };
-        return objeto;
+        return venta;
     };
 
 
@@ -101,12 +155,16 @@ var Module = (function (_my) {
 
 
     //render
-
-    _my.render = function (view, state, data, descargador, cb) {
-        console.log("Render Call: view=" + view + "; action=" + state + "; data=" + JSON.stringify(data) + ";");
+    // la función render toma una vista, un estado y datos obtenidos a través de una petición AJAX para renderizar un formulario cargado.
+    // el único parámetro obligatorio es la vista.
+    // el parametro de estado contiene la información del estado de la pantalla, los botones y sus acciones, el título, el estado de los inputs (disabled)
+    _my.render = function (view, state, dataorcb, descargador, cb) {
+        console.log("Render Call: view=" + view + "; action=" + state + "; data=" + JSON.stringify(dataorcb) + ";");
         var actualAction = _my.states[state] || null;
+        
         var responseCallback = function (result) {
             if (actualAction) {
+                console.log("State :" + JSON.stringify(actualAction));
                 if (typeof (actualAction.partialData) != 'undefined' && actualAction.partialData != null) {
                     result = _.template(result)(actualAction.partialData);
                 }
@@ -139,14 +197,23 @@ var Module = (function (_my) {
             }
             var htmlFinal = source.html();
             $("#main").html(htmlFinal);
-            if (data) {
-                if (data.Precio) {
-                    data.Precio = Number(data.Precio).toFixed(2);
+            if (dataorcb) {
+                if (dataorcb !== Function) {
+
+                    if (dataorcb.Precio) {
+                        dataorcb.Precio = Number(dataorcb.Precio).toFixed(2);
+                    }
+                    if (descargador === Function) {
+                        descargador(dataorcb);
+                    }
                 }
-                descargador(data);
             }
-            if (cb) {
-                cb();
+            if (arguments[2] === Function || arguments[4] === Function) {
+                if (arguments[2] === Function) {
+                    arguments[2]();
+                } else {
+                    arguments[4]();
+                }
             }
         };
         $.ajax({

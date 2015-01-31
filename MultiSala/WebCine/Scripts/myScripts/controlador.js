@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     $.Reload = function () {
-        Module.cargaIndex();
+        Module.handlers.cargaIndex();
+        Module.Constantes.loadStatus();
     }
     $.Reload();
 });

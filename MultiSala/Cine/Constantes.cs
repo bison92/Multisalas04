@@ -15,6 +15,7 @@ namespace Cine
         public const int MINUTO_FIN = 59;
 
         public const double PRECIO = 7.0d;
+        public const int DESCUENTOHUMBRAL = 5;
         public const double DESCUENTOGRUPO = 0.9d;
         public const double DESCUENTOJOVEN = 0.8d;
     }

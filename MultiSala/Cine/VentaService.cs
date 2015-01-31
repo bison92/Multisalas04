@@ -17,13 +17,13 @@ namespace Cine
 
         public VentasDTO Create(VentasDTO venta)
         {
-            if (!Repositorio.ReadSesion(venta.SesionID).Abierto) //Comprobamos si la sesión de destino se encuentra abierta.
+            if (!Repositorio.ReadSesion(venta.SesionId).Abierto) //Comprobamos si la sesión de destino se encuentra abierta.
             {
                 throw new Exception("Imposible vender entradas: La sesión se encuentra cerrada.");
             }
             else
             {
-                if (!Repositorio.HayButacas(venta.NEntradas, venta.SesionID)) //Comprobamos si quedan butacas disponibles en la sesión de destino.
+                if (!Repositorio.HayButacas(venta.NEntradas, venta.SesionId)) //Comprobamos si quedan butacas disponibles en la sesión de destino.
                 {
                     throw new Exception("Imposible vender entradas: No quedan butacas disponibles.");
                 }

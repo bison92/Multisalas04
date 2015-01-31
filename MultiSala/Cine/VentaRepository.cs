@@ -116,12 +116,12 @@ namespace Cine
             foreach (Venta venta in listaVentas)
             {
                 VentasDTO dto = new VentasDTO();
-                dto.ID = venta.ID;
+                dto.VentaId = venta.ID;
                 dto.NEntradas = venta.NEntradas;
                 dto.NEntradasJoven = venta.NEntradasJoven;
                 dto.Precio = venta.Precio;
 
-                dto.SesionID = venta.SesionID;
+                dto.SesionId = venta.SesionID;
 
                 listaDTO.Add(dto);
             }
@@ -133,12 +133,12 @@ namespace Cine
             VentasDTO dto = new VentasDTO();
             if (venta != null)
             {
-                dto.ID = venta.ID;
+                dto.VentaId = venta.ID;
                 dto.NEntradas = venta.NEntradas;
                 dto.NEntradasJoven = venta.NEntradasJoven;
                 dto.Precio = venta.Precio;
 
-                dto.SesionID = venta.SesionID;
+                dto.SesionId = venta.SesionID;
             }
             return dto;
         }
@@ -150,12 +150,12 @@ namespace Cine
             Venta v = new Venta();
             if (ventaDto != null)
             {
-                v.ID = ventaDto.ID;
+                v.ID = ventaDto.VentaId;
                 v.NEntradas = ventaDto.NEntradas;
                 v.NEntradasJoven = ventaDto.NEntradasJoven;
                 v.Precio = ventaDto.Precio;
 
-                v.SesionID = ventaDto.SesionID;
+                v.SesionID = ventaDto.SesionId;
                 v.Sesion = null;
             }
             return v;
@@ -206,7 +206,7 @@ namespace Cine
 
             if (sesionDB.Abierto) //Comprobamos si la sesión de destino se encuentra abierta.
             {
-                if (ReadSesion(Read(idVenta).SesionID).Abierto) //Comprobamos si la sesión de origen se encuentra abierta.
+                if (ReadSesion(Read(idVenta).SesionId).Abierto) //Comprobamos si la sesión de origen se encuentra abierta.
                 {
                     using (var context = new DatosDB())
                     {
