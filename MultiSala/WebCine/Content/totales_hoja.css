@@ -1,0 +1,60 @@
+﻿body {
+}
+
+#contenedor {
+width: 800px;
+height:600px;
+
+
+}
+.totales_contenedor {
+    width: 700px;
+    height:200px;
+    
+    
+}
+.totales_nav {
+    text-align:center;
+    width: 100%;
+    height:auto;
+    
+}
+.totales_footer {
+    width: 100%;
+    height:25%;
+    text-align:center;
+    margin-top: 70px;
+}
+.totales_article {
+    text-align: center;
+    width: 100%;
+    height: 20px;
+    margin-top: 30px;
+    
+}
+.totales_resultado{
+    margin-top: 20px;
+    font-size:x-large;
+}
+.totales_nav > div {
+    margin:4px;
+    display:inline-block;
+    padding: 5px;
+width:400px;
+width:100px;
+background-color:#CCC;
+border-radius:7px;
+
+}
+.totales_nav > div:hover {
+    cursor:pointer;
+}
+.btn_totales_calcula{
+    width:auto;
+    height:auto;
+    cursor:pointer;
+    background-color:#CCC;
+border-radius:7px;
+text-align:center;
+padding: 5px;
+}

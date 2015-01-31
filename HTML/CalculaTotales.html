@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+
+<head>
+    <title></title>
+    <script type="text/javascript" src="../JS/Librerias/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="../JS/CalculaTotales.js"></script>
+    <link rel="stylesheet" type="text/css" href="../CSS/hoja.css">
+    <script>
+
+        $(document).ready(function () {
+
+
+
+            $("#b_t").click(function () {
+                var resultado = controladorCalculaTotales.total();
+                $("#t").text(resultado + " €");
+            });
+
+            $("#b_t_se").click(function () {
+                var resultado = controladorCalculaTotales.totalSesion();
+                $("#t_se").text(resultado + " €");
+            });
+
+            $("#b_t_sa").click(function () {
+                var resultado = controladorCalculaTotales.totalSala();
+                $("#t_sa").text(resultado + " €");
+            });
+
+
+        });
+    </script>
+</head>
+
+<body>
+    <div>
+        <div id="t_ventas">
+            <form>
+                <h1>Total </h1><br />
+                <button type="button" id="b_t">Calcular</button>
+                <div>Total:</div>
+                <div id="t">######</div>
+            </form>
+        </div>
+        <div id="t_sesion">
+            <form>
+                <h1>Total Sesión</h1>
+                <div>Sesión ID:</div>
+                <input type="text" id="id_sesion"><br />
+                <button type="button" id="b_t_se">Calcular</button>
+                <div>Total:</div>
+                <div id="t_se">######</div>
+            </form>
+        </div>
+        <div id="t_sala">
+            <form>
+                <h1>Total Sala</h1>
+                <div>Sala ID:</div>
+                <input type="text" id="id_sala"><br />
+                <button type="button" id="b_t_sa">Calcular</button>
+                <div>Total:</div>
+                <div id="t_sa">######</div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

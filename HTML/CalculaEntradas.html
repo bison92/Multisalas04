@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+
+<head>
+    <title></title>
+    <script type="text/javascript" src="../JS/Librerias/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="../JS/CalculaEntradas.js"></script>
+    <link rel="stylesheet" type="text/css" href="../CSS/hoja.css">
+    <script>
+        $(document).ready(function () {
+
+            $("#b_t_en").click(function () {
+                var resultado = my.VentasModule.controladorCalculaEntradas.totalEntradas();
+                $("#t_en").text(resultado + " Entradas");
+            });
+
+            $("#b_t_en_se").click(function () {
+                var resultado = my.VentasModule.controladorCalculaEntradas.totalEntradasSesion();
+                $("#t_en_se").text(resultado + " Entradas");
+            });
+
+            $("#b_t_en_sa").click(function () {
+                var resultado = my.VentasModule.controladorCalculaEntradas.totalEntradasSala();
+                $("#t_en_sa").text(resultado + " Entradas");
+            });
+
+
+        });
+    </script>
+</head>
+
+<body>
+    <div>
+        <div id="t_ventas">
+            <form>
+                <h1>Total Entradas</h1><br />
+                <button type="button" id="b_t_en">Calcular</button>
+                <div>Total:</div>
+                <div id="t_en">######</div>
+            </form>
+        </div>
+        <div id="t_sesion">
+            <form>
+                <h1>Total Entradas Sesión</h1>
+                <div>Sesión ID:</div>
+                <input type="text" id="id_entrada_sesion"><br />
+                <button type="button" id="b_t_en_se">Calcular</button>
+                <div>Total:</div>
+                <div id="t_en_se">######</div>
+            </form>
+        </div>
+        <div id="t_sala">
+            <form>
+                <h1>Total Entradas Sala</h1>
+                <div>Sala ID:</div>
+                <input type="text" id="id_entrada_sala"><br />
+                <button type="button" id="b_t_en_sa">Calcular</button>
+                <div>Total:</div>
+                <div id="t_en_sa">######</div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

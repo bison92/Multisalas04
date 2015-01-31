@@ -1,0 +1,29 @@
+﻿<div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>Sala ID</th>
+                <th>Sesion Id</th>
+                <th>Fecha</th>
+                <th> Seleccionar </th>
+            </tr>
+        </thead>
+        <tbody id="tablaSesiones">
+           <% _.each(items,function(item){ %>
+              <tr>
+                    <% if (item.Abierto) { %>
+                        <td> Abierta </td> 
+                    <% } else { %>
+                        <td> Cerrada </td>
+                    <% } %>
+                    <td><%=item.SalaId %></td>
+                    <td><%=item.SesionId %></td>
+                    <td><%=item.fecha %></td>
+                    <td><input type="checkbox" name="valorEstado" value=""><br>  </td>
+               </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+ 
