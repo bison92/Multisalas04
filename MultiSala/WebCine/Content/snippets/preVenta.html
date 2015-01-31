@@ -1,6 +1,11 @@
 ﻿<div>
     <div><label for="ventaid">Numero venta</label><input id="ventaid" type="text"></div>
-    <div><label for="sesionid">Sesion</label><input id="sesionid" type="text"></div>
+    <div><label for="sesionid">Sesion</label>
+        <select id="sesionid" type="text">
+            <% _.each(items, function(item, key){ %>
+            <option value="<%= item.SesionId %>"><%= item.SesionId %> : <%= item.fecha %></option>
+            <% }); %>
+        </select></div>
     <div><label for="nentradasjoven">Entradas carnet joven</label><input id="nentradasjoven" type="text"></div>
     <div><label for="nentradas">Entradas totales</label><input id="nentradas" type="text"></div>
     <div><label for="precio">Total</label><input id="precio" type="text"></div>

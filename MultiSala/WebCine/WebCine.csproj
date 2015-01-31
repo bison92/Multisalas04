@@ -247,6 +247,7 @@
     <Content Include="Content\snippets\cambiarDevolverSnippet.html" />
     <Content Include="Content\snippets\cambioDevolucionPedirDatos.html" />
     <Content Include="Content\snippets\seleccionaSesion.html" />
+    <Content Include="Content\snippets\preVenta.html" />
     <Content Include="Content\snippets\ventaForm.html" />
     <Content Include="Content\snippets\venta.html" />
     <Content Include="Content\index.html" />

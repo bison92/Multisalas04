@@ -1,7 +1,7 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
     $.Reload = function () {
         Module.handlers.cargaIndex();
-        Module.Constantes.loadStatus();
+        Module.constantes.loadStatus();
     }
     $.Reload();
 });

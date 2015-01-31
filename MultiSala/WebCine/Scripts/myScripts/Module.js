@@ -1,46 +1,59 @@
 ﻿
 var Module = (function (_my) {
-    // Constantes object 
-    _my.Constantes = {};
-    _my.Constantes.url = "/api/status"
-    _my.Constantes.Precio = 0;
-    _my.Constantes.DescuentoHumbral = 0;
-    _my.Constantes.DescuentoGrupo = 0;
-    _my.Constantes.DescuentoGrupoJoven = 0;
-    _my.Constantes.loadStatus = function () {
+    var isFunction = function(functionToCheck) {
+        var getType = {};
+        return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+    }
+    _my.listadoSesiones = new Array();
+    $.ajax('/api/sesion', {
+        success: function (data) {
+            _my.listadoSesiones = data;
+        },
+    });
+    // constantes object 
+    _my.constantes = {};
+    _my.constantes.url = "/api/status"
+    _my.constantes.Precio = 0;
+    _my.constantes.DescuentoHumbral = 0;
+    _my.constantes.DescuentoGrupo = 0;
+    _my.constantes.DescuentoGrupoJoven = 0;
+    _my.constantes.loadStatus = function () {
         $.ajax({
-            url: _my.Constantes.url,
+            url: _my.constantes.url,
             type: "get",
             dataType: "json",
             success: function (data) {
                 for (property in data) {
-                    console.log(property);
-                    if (_my.Constantes.hasOwnProperty(property.toString())) {
-                        _my.Constantes[property.toString()] = data[property];
+                    if (_my.constantes.hasOwnProperty(property.toString())) {
+                        _my.constantes[property.toString()] = data[property];
                     }
                 }
             },
         });
     };
-    // botones    
+    // botones 
+    // colección de Markup de los distintos botones de la aplicación para maximizar su reutilización
     _my.botones = {};
-    _my.botones["btndevolucionventa"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-devolucion-venta\">Devolver</button>";
-    _my.botones["btncorregir"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-corregir\">Corregir</button>";
-    _my.botones["btnvolver"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-volver\">Volver</button>";
-    _my.botones["btncomprar"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-comprar\">Comprar</button>";
-    _my.botones["btncancelar"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-cancelar\">Cancelar</button>";
-    _my.botones["btncambiar"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-cambiar\">Cambiar</button>";
-    _my.botones["btnlimpiar"] = "<button type=\"reset\"  class=\"btn btn-info\"  id=\"btn-limpiar\">Limpiar</button>";
-    _my.botones["btnconfirmarcompra"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-confirmarcompra\">ConfirmarCompra</button>";
-    _my.botones["btnconfirmarcambio"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-confirmarcambio\">ConfirmarCambio</button>";
-    _my.botones["btnconfirmardevolucion"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-confirmardevolucion\">ConfirmarDevolucion</button>";
-    _my.botones["btnversesion"] = "<button type=\"button\" class=\"btn btn-info\" id=\"btn-versesion\">VerSesion</button>";
+    _my.botones["btndevolucionventa"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-devolucion-venta\">Devolver</button>&nbsp;";
+    _my.botones["btncorregir"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-corregir\">Corregir</button>&nbsp;";
+    _my.botones["btnvolver"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-volver\">Volver</button>&nbsp;";
+    _my.botones["btncomprar"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-comprar\">Comprar</button>&nbsp;";
+    _my.botones["btncancelar"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-cancelar\">Cancelar</button>&nbsp;";
+    _my.botones["btncambiar"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-cambiar\">Cambiar</button>&nbsp;";
+    _my.botones["btnlimpiar"] = "<button type=\"reset\"  class=\"btn btn-primary\"  id=\"btn-limpiar\">Limpiar</button>&nbsp;";
+    _my.botones["btnconfirmarcompra"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmarcompra\">ConfirmarCompra</button>&nbsp;";
+    _my.botones["btnconfirmarcambio"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmarcambio\">ConfirmarCambio</button>&nbsp;";
+    _my.botones["btnconfirmardevolucion"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmardevolucion\">ConfirmarDevolucion</button>&nbsp;";
+    _my.botones["btnversesion"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-versesion\">VerSesion</button>&nbsp;";
 
     // State Object (Estado)
     // contienen la información que necesita render para pintar cada estado en un formulario o fragmento html.
     // cada estado es un objeto con la siguientes propiedades:
     //  + title: String, el título de la página.
-    //  
+    //
+    //  + hidden : para cada etiqueta input decide si está o no escondida (el partial debe de tener la structura <div><input></div>
+    //  + disabled : para cada etiqueta input decide si está o no hablitada.
+    //
     //  + botones : Array of HTMLString, listado ordenado de botones que tiene la vista.
     //  + handlers : Array of FunctionHandlers, listado ordenado de funciones (event handlers) que se disparan 
     //               cuando se hace click en los botones definidos.
@@ -48,14 +61,18 @@ var Module = (function (_my) {
     //// 
 
     _my.states = {};
+    
+    // estado inicial
     _my.states["home"] = {
         title: "CyC",
     };
-
+    // 1er estado crear venta.
     _my.states["venderPedirDatos"] = {
         title: "Crear venta",
-        hidden : [false, false, false, false, false],
-        disabled: [true, false, false, false, true],
+
+        hidden: [true, false, false, true],
+        disabled: [true, false, false, true],
+
         botones: [
             _my.botones.btncomprar,
             _my.botones.btnlimpiar,
@@ -66,10 +83,14 @@ var Module = (function (_my) {
                 _my.handlers.comprobarVenta();
             },
             function () {
-                _my.handlers.resetForm();
+                _my.handlers.limpiarVenta();
+            },
+            function () {
+                _my.handlers.volverAlPrincipio();
             },
         ],
-    }
+    };
+    // 1er estado cambiar / devolver venta
     _my.states["cambioDevolucionPedirDatos"] = {
         title: "Modificar venta",
         botones: [
@@ -84,25 +105,24 @@ var Module = (function (_my) {
             },
         ],
     };
+
+    // 1er estado listado sesiones
     _my.states["seleccionaSesion"] = {
         title: "Seleccione la Sesion",
         botones: [_my.botones.btnversesion, _my.botones.btnvolver],
         handlers: [function () { _my.handlers.SeleccionaSesion(); }, function () { _my.handlers.volveralprincipio() }],
     };
+
     // handlers 
-    // namespace para los
+    // namespace para los manejadores de eventos, funciones que se ejecutan como resultado de los clicks/cambios del usuario en los controles de la aplicación.
 
     _my.handlers = {};
 
-    _my.handlers.volveralprincipio = function () {
+    _my.handlers.volverAlPrincipio = function () {
         $("#actions").html("");
          _my.handlers.cargaIndex();
      
     }
-
-
-    
-
     _my.handlers.cargaIndex = function () {
 
         _my.render('home', 'home', function () {
@@ -113,10 +133,17 @@ var Module = (function (_my) {
     };
 
     // rutas 
-    _my.rutas = {};
 
+    _my.rutas = {};
     _my.rutas["venderPedirDatos"] = function () {
-        _my.render('venta', 'venderPedirDatos');
+        _my.states.venderPedirDatos.partialData = {};
+        _my.states.venderPedirDatos.partialData.items = [];
+        _.each(_my.listadoSesiones, function (element, key) {
+            if (element.Abierto == true) {
+                _my.states.venderPedirDatos.partialData.items.push(element);
+            }
+        });
+        _my.render('preVenta', 'venderPedirDatos');
     }
 
     _my.rutas["cambioDevolucionPedirDatos"] = function () {
@@ -130,29 +157,22 @@ var Module = (function (_my) {
 
     _my.helpers = {};
     _my.helpers.descargaVentas = function (venta) {
-        $("#ventaid").val(venta.ID),
-        $("#sesionid").val(venta.SesionID),
+        $("#ventaid").val(venta.VentaId),
+        $("#sesionid").val(venta.SesionId),
         $("#nentradas").val(venta.NEntradas),
         $("#nentradasjoven").val(venta.NEntradasJoven),
         $("#precio").val(venta.Precio)
     };
     _my.helpers.cargaVentas = function () {
         var venta = {
-            ID: $("#ventaid").val(),
-            SesionID: $("#sesionid").val(),
-            NEntradas: $("#nentradas").val(),
-            NEntradasJoven: $("#nentradasjoven").val(),
+            VentaId: Number($("#ventaid").val()),
+            SesionId: Number($("#sesionid").val()),
+            NEntradas: Number($("#nentradas").val()),
+            NEntradasJoven: Number($("#nentradasjoven").val()),
             Precio: $("#precio").val(),
         };
         return venta;
     };
-
-
-    _my.rutas["seleccionaSesion"] = function () {
-        console.log("llamado");
-        _my.render('seleccionaSesion', 'seleccionaSesion');
-    }
-
 
     //render
     // la función render toma una vista, un estado y datos obtenidos a través de una petición AJAX para renderizar un formulario cargado.
@@ -161,7 +181,6 @@ var Module = (function (_my) {
     _my.render = function (view, state, dataorcb, descargador, cb) {
         console.log("Render Call: view=" + view + "; action=" + state + "; data=" + JSON.stringify(dataorcb) + ";");
         var actualAction = _my.states[state] || null;
-        
         var responseCallback = function (result) {
             if (actualAction) {
                 console.log("State :" + JSON.stringify(actualAction));
@@ -176,6 +195,13 @@ var Module = (function (_my) {
                 if (actualAction.disabled != null && actualAction.disabled.length != 0) {
                     for (var i = 0; i < actualAction.disabled.length; i++) {
                         inputs.eq(i).attr("disabled", actualAction.disabled[i]);
+                    }
+                }
+                if (actualAction.hidden != null && actualAction.hidden.length != 0) {
+                    for (var i = 0; i < actualAction.hidden.length; i++) {
+                        if (actualAction.hidden[i]) {
+                            inputs.eq(i).parent().attr("style", "display:none;");
+                        }
                     }
                 }
                 if (actualAction.botones != null && actualAction.botones.length != 0) {
@@ -198,21 +224,18 @@ var Module = (function (_my) {
             var htmlFinal = source.html();
             $("#main").html(htmlFinal);
             if (dataorcb) {
-                if (dataorcb !== Function) {
-
+                if (!isFunction(dataorcb)) {
                     if (dataorcb.Precio) {
-                        dataorcb.Precio = Number(dataorcb.Precio).toFixed(2);
+                        dataorcb.Precio = Number(dataorcb.Precio).toFixed(2)+"€";
                     }
-                    if (descargador === Function) {
+                    if (typeof descargador === 'function') {
                         descargador(dataorcb);
                     }
-                }
-            }
-            if (arguments[2] === Function || arguments[4] === Function) {
-                if (arguments[2] === Function) {
-                    arguments[2]();
+                    if (cb) {
+                        cb();
+                    }
                 } else {
-                    arguments[4]();
+                    dataorcb();
                 }
             }
         };
@@ -222,7 +245,7 @@ var Module = (function (_my) {
             dataType: "html",
         });
     };
-
+   
     return _my;
 
 
