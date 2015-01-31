@@ -66,6 +66,7 @@ var Module = (function (_my) {
     };
     // 1er estado crear venta.
     _my.states["venderPedirDatos"] = {
+
         title: "Crear venta",
 
         hidden: [true, false, false, true],
@@ -90,7 +91,9 @@ var Module = (function (_my) {
     };
     // 1er estado cambiar / devolver venta
     _my.states["cambioDevolucionPedirDatos"] = {
+
         title: "Modificar venta",
+
         botones: [
             _my.botones.btndevolucionventa,
             _my.botones.btncambiar,
@@ -99,9 +102,11 @@ var Module = (function (_my) {
         ],
         handlers: [
             function () {
-                _my.handlers.CargarCrearDevolucion();
+                _my.handlers.CargarCrear("devolucion");
             },
-            null,
+            function () {
+                _my.handlers.CargarCrear("cambio");
+            },
             function() {
                 _my.rutas.venderPedirDatos();
             },

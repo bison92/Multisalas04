@@ -1,6 +1,6 @@
-﻿var Module = (function (_my) {
+var Module = (function (_my) {
     // metodos pricados de validación y cálculo de precio.
-    var calculaPrecio = function(model){
+    _my.helpers.calculaPrecio = function(model){
         if(_my.constantes.Precio == 0){
             _my.constantes.loadStatus();
         }
@@ -84,7 +84,7 @@
         ],
         handlers: [
             function () {
-                _my.handlers.CargarCrearDevolucion();
+                _my.handlers.CargarCrear("devolucion");
             },
             function () {
                 _my.handlers.limpiarVenta();
@@ -92,9 +92,7 @@
         ],
     };
 
-    _my.handlers.comprobarVenta = function () {
-        $("#btncomprar").attr("disabled", true);
-        var model = _my.helpers.cargaVentas();
+    _my.helpers.comprobarVenta = function (model, cb, errcb) {
         if (validaFormulario(model)) {
             $.when(validaSesionAbierta(model.SesionId), validaButacas(model.SesionId))
                 .then(function (sesion, entradasDisponibles) {
@@ -103,18 +101,34 @@
                             if (entradasDisponibles[1] == "success") {
                                 if (Number(entradasDisponibles[0]) < model.NEntradas) {
                                     alert("No hay suficientes butacas disponibles para la sesión solicitada");
+                                    if (errcb) {
+                                        errcb();
+                                    }
                                 } else {
-
-                                    model.Precio = calculaPrecio(model);
-                                    _my.render('venta', 'confirmarVenta', model, _my.helpers.descargaVentas);
+                                    cb();
                                 }
                             }
                         } else {
                             alert("La sesión seleccionada está cerrada");
+                            if (errcb) {
+                                errcb();
+                            }
                         }
                     }
-            });
+                });
+        } else {
+            if (errcb) {
+                errcb();
+            }
         }
+    };
+    _my.handlers.comprobarVenta = function () {
+        $("#btncomprar").attr("disabled", true);
+        var model = _my.helpers.cargaVentas();
+        _my.helpers.comprobarVenta(model, function () {
+            model.Precio = _my.helpers.calculaPrecio(model);
+            _my.render('venta', 'confirmarVenta', model, _my.helpers.descargaVentas);
+        });                 
     };
     _my.handlers.confirmarVenta = function() {
         $("#btn-confirmarcompra").attr("disabled", true);

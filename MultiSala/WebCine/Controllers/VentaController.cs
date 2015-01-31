@@ -59,7 +59,7 @@ namespace WebCine.Controllers
         }
 
         // PUT api/venta/{id:int}
-        [Route("api/venta/cambio/{id:int}")]
+        [Route("api/venta/{id:int}")]
         public VentasDTO Put(long id, VentasDTO venta)
         {
             return Servicio.Update(id, venta.SesionId);
