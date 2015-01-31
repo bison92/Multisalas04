@@ -1,5 +1,6 @@
-﻿
+
 var Module = (function (_my) {
+    // obtiene el listado de sesiones.
     _my.listadoSesiones = new Array();
     $.ajax('/api/sesion', {
         success: function (data) {
@@ -27,6 +28,7 @@ var Module = (function (_my) {
             },
         });
     };
+    _my.constantes.loadStatus();
     // botones 
     // colección de Markup de los distintos botones de la aplicación para maximizar su reutilización
     _my.botones = {};
@@ -37,10 +39,10 @@ var Module = (function (_my) {
     _my.botones["btncancelar"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-cancelar\">Cancelar</button>&nbsp;";
     _my.botones["btncambiar"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-cambiar\">Cambiar</button>&nbsp;";
     _my.botones["btnlimpiar"] = "<button type=\"reset\"  class=\"btn btn-primary\"  id=\"btn-limpiar\">Limpiar</button>&nbsp;";
-    _my.botones["btnconfirmarcompra"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmarcompra\">ConfirmarCompra</button>&nbsp;";
-    _my.botones["btnconfirmarcambio"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmarcambio\">ConfirmarCambio</button>&nbsp;";
-    _my.botones["btnconfirmardevolucion"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmardevolucion\">ConfirmarDevolucion</button>&nbsp;";
-    _my.botones["btnversesion"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-versesion\">VerSesion</button>&nbsp;";
+    _my.botones["btnconfirmarcompra"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmarcompra\">Confirmar Compra</button>&nbsp;";
+    _my.botones["btnconfirmarcambio"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmarcambio\">Confirmar Cambio</button>&nbsp;";
+    _my.botones["btnconfirmardevolucion"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-confirmardevolucion\">Confirmar Devolucion</button>&nbsp;";
+    _my.botones["btnversesion"] = "<button type=\"button\" class=\"btn btn-primary\" id=\"btn-versesion\">Ver Sesion</button>&nbsp;";
 
     // State Object (Estado)
     // contienen la información que necesita render para pintar cada estado en un formulario o fragmento html.
@@ -92,12 +94,19 @@ var Module = (function (_my) {
         botones: [
             _my.botones.btndevolucionventa,
             _my.botones.btncambiar,
-            _my.botones.btnvolver,
             _my.botones.btncomprar,
+            _my.botones.btnvolver,
         ],
         handlers: [
             function () {
                 _my.handlers.CargarCrearDevolucion();
+            },
+            null,
+            function() {
+                _my.rutas.venderPedirDatos();
+            },
+            function() {
+                _my.rutas.Index();
             },
         ],
     };
@@ -115,22 +124,22 @@ var Module = (function (_my) {
     _my.handlers = {};
 
     _my.handlers.volverAlPrincipio = function () {
-        $("#actions").html("");
-         _my.handlers.cargaIndex();
+       
+         _my.rutas.Index();
      
     }
-    _my.handlers.cargaIndex = function () {
 
+    // rutas 
+
+    _my.rutas = {};
+    _my.rutas.Index = function () {
+        $("#actions").html("");
         _my.render('home', 'home', function () {
             $("#btn-create-venta").click(_my.rutas.venderPedirDatos);
             $("#btn-cambia-venta").click(_my.rutas.cambioDevolucionPedirDatos);
             $("#btn-listado-sesiones").click(_my.rutas.seleccionaSesion);
         });
     };
-
-    // rutas 
-
-    _my.rutas = {};
     _my.rutas["venderPedirDatos"] = function () {
         _my.states.venderPedirDatos.partialData = {};
         _my.states.venderPedirDatos.partialData.items = [];

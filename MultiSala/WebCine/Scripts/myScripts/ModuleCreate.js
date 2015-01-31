@@ -35,7 +35,7 @@
         }
         return valido;
     };
-    var validaButacas = function (nEntradas, sesionId) {
+    var validaButacas = function (sesionId) {
         return $.ajax({
             type: "get",
             url: "/api/venta/entradasDisponibles/" + sesionId,
@@ -52,26 +52,83 @@
         title : "Confirme la venta",
         hidden: [true, false, false, false, false],
         disabled: [true, true, true, true, true],
-        botones: [_my.botones.btnconfirmarcompra, _my.botones.btncorregir, _my.botones.btnlimpiar, _my.botones.btnvolver],
-        handlers: [null, function () { _my.handlers.corregirVenta(); }, function() { _my.handlers.limpiarVenta(); }, function() { _my.handlers.volverAlPrincipio(); }]
+        botones: [
+            _my.botones.btnconfirmarcompra,
+            _my.botones.btncorregir,
+            _my.botones.btnlimpiar,
+            _my.botones.btnvolver,
+        ],
+        handlers: [
+            function () {
+                _my.handlers.confirmarVenta();
+            },
+            function () {
+                _my.handlers.corregirVenta();
+            },
+            function () {
+                _my.handlers.limpiarVenta();
+            },
+            function () {
+                _my.handlers.volverAlPrincipio();
+            },
+        ],
     };
     // estados 3a pantalla de venta.
+    _my.states.ventaConfirmada = {
+        title: "Venta confirmada",
+        hidden: [], //defaults to false.
+        disabled: [true, true, true, true, true],
+        botones: [
+            _my.botones.btndevolucionventa,
+            _my.botones.btnvolver
+        ],
+        handlers: [
+            function () {
+                _my.handlers.CargarCrearDevolucion();
+            },
+            function () {
+                _my.handlers.limpiarVenta();
+            },
+        ],
+    };
 
     _my.handlers.comprobarVenta = function () {
         $("#btncomprar").attr("disabled", true);
         var model = _my.helpers.cargaVentas();
         if (validaFormulario(model)) {
-            $.when(validaSesionAbierta(model.SesionId), validaButacas(model.NEntradas, model.SesionId))
-                .then([function (data) {
-                if (Number(data) < model.NEntradas) {
-                    alert("No hay suficientes butacas disponibles para la sesión solicitada");
-                } else {
-                    model.Precio = calculaPrecio(model);
-                    _my.render('venta', 'confirmarVenta', model, _my.helpers.descargaVentas);
-                }
-            }, function (data) { }]);
+            $.when(validaSesionAbierta(model.SesionId), validaButacas(model.SesionId))
+                .then(function (sesion, entradasDisponibles) {
+                    if (sesion[1] == "success") {
+                        if (sesion[0].Abierto) {
+                            if (entradasDisponibles[1] == "success") {
+                                if (Number(entradasDisponibles[0]) < model.NEntradas) {
+                                    alert("No hay suficientes butacas disponibles para la sesión solicitada");
+                                } else {
+
+                                    model.Precio = calculaPrecio(model);
+                                    _my.render('venta', 'confirmarVenta', model, _my.helpers.descargaVentas);
+                                }
+                            }
+                        } else {
+                            alert("La sesión seleccionada está cerrada");
+                        }
+                    }
+            });
         }
     };
+    _my.handlers.confirmarVenta = function() {
+        $("#btn-confirmarcompra").attr("disabled", true);
+        var model = _my.helpers.cargaVentas();
+        model.VentaId = 0;
+        model.Precio = 0;
+        $.post("/api/venta", model, function(data) {
+            _my.render('venta', 'ventaConfirmada', data, _my.helpers.descargaVentas);
+        }).error(function(error){
+            console.log(error);
+            alert("Error, " + error.responseJSON.ExceptionMessage);
+            _my.rutas.venderPedirDatos();
+        });
+    }
     _my.handlers.corregirVenta = function () {
         var model = _my.helpers.cargaVentas();
         model.VentaId = 0;
