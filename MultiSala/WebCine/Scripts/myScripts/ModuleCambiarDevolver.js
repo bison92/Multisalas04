@@ -82,15 +82,15 @@ var Module = (function (_my) {
         title: "Cambios confirmados",
         disabled: [true, true, true, true, true],
         botones: [
+            _my.botones.btncomprar,
             _my.botones.btnvolver,
-            _my.botones.btncomprar
         ],
         handlers: [
             function () {
-                _my.rutas.Index();
+                _my.rutas.venderPedirDatos();
             },
             function () {
-                _my.rutas.venderPedirDatos();
+                _my.rutas.Index();
             },
         ],
     };
