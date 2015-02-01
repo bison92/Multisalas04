@@ -11,7 +11,7 @@ namespace Cine
 
         VentasDTO Create(VentasDTO venta);
         VentasDTO Read(long id);
-        VentasDTO Update(long idVenta, long idSesion);
+        VentasDTO Update(long idVenta, VentasDTO venta);
         VentasDTO Delete(long id);
 
         IList<VentasDTO> List();
@@ -22,7 +22,7 @@ namespace Cine
         Sala ReadSala(long idSala);
 
         double DevolverVenta(long idVenta);
-        bool HayButacas(int butacas, long sesionID);
+        bool HayButacas(int butacas, long sesionID, VentasDTO antiguaVenta = null);
         int EntradasDisponibles(long sesionID);
 
         double CalcularTotalVentas(DateTime fecha);

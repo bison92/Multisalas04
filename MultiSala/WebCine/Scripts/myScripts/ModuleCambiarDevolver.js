@@ -50,28 +50,35 @@
         handlers: [function () { _my.rutas.Index(); }, function () { _my.rutas.venderPedirDatos(); }, ],
         disabled: [true, true, true, true, true],
     };
-    
+
 
     _my.handlers.CargarCrear = function (action) {
-        
+        if (action == "devolucion") {
+            $("#btn-devolucion-venta").attr("disabled", true);
+        }
+        if (action == "cambiar") {
+            $("#btn-cambiar").attr("disabled", true);
+        }
         var identificador = $("#ventaid").val();
         if (identificador) {
-        $.get("/api/venta/" + identificador, "", function (data) {
-            if (data.VentaId == 0) {
-                alert("No existe la venta con número: " + identificador);
-                $("#ventaid").val("");
-            } else {
-                if (action == "devolucion") {
-                    _my.render('venta', 'DatosDevolucion', data, _my.helpers.descargaVentas);
+            $.get("/api/venta/" + identificador, "", function (data) {
+                if (data.VentaId == 0) {
+                    alert("No existe la venta con número: " + identificador);
+                    $("#ventaid").val("");
+                } else {
+                    if (action == "devolucion") {
+                        _my.render('venta', 'DatosDevolucion', data, _my.helpers.descargaVentas);
+                    }
+                    if (action == "cambio") {
+                        _my.render('venta', 'DatosCambio', data, _my.helpers.descargaVentas);
+                    }
                 }
-                if (action == "cambio") {
-                    _my.render('venta', 'DatosCambio', data, _my.helpers.descargaVentas);
-                }
-            }
-        }, "json");
+            }, "json");
 
         } else {
             alert("Introduzca un identificador de venta válido.");
+            $("#btn-devolucion-venta").attr("disabled", false);
+            $("#btn-cambiar").attr("disabled", false);
         }
     };
 
@@ -91,12 +98,26 @@
     _my.handlers.ComprobarCambio = function () {
         $("#btn-confirmarcambio").attr("disabled", true);
         var model = _my.helpers.cargaVentas();
-        _my.helpers.comprobarVenta(model, function () {
-            model.Precio = _my.helpers.calculaPrecio(model);
-            _my.render('venta', 'ConfirmarCambio', model, _my.helpers.descargaVentas);
-        }, function () {
-            $("#btn-confirmarcambio").attr("disabled", false);
-        });
+        $.when($.ajax({
+            url: "/api/venta/" + model.VentaId,
+            type: "get",
+            success: function (data) {
+                _my.helpers.comprobarVenta(model, function () {
+                    model.Precio = _my.helpers.calculaPrecio(model);
+                    _my.render('venta', 'ConfirmarCambio', model, _my.helpers.descargaVentas, function () {
+                        $("#precio").parent().parent().append($("<div>").append("<label>Cambio</label>").attr({
+                            "for": "cambio",
+                        }).parent().append("<input>").attr({
+                            id: "cambio",
+                            type: "text",
+                            value: (model.Precio - data.Precio),
+                        }));
+                    });
+                }, function () {
+                    $("#btn-confirmarcambio").attr("disabled", false);
+                }, data);
+            }
+        }))
     }
     _my.handlers.CorregirCambio = function () {
         var model = _my.helpers.cargaVentas();

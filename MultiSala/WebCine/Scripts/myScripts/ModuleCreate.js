@@ -92,13 +92,16 @@ var Module = (function (_my) {
         ],
     };
 
-    _my.helpers.comprobarVenta = function (model, cb, errcb) {
+    _my.helpers.comprobarVenta = function (model, cb, errcb, oldmodel) {
         if (validaFormulario(model)) {
             $.when(validaSesionAbierta(model.SesionId), validaButacas(model.SesionId))
                 .then(function (sesion, entradasDisponibles) {
                     if (sesion[1] == "success") {
                         if (sesion[0].Abierto) {
                             if (entradasDisponibles[1] == "success") {
+                                if (oldmodel && oldmodel.SesionId == model.SesionId)  {
+                                    entradasDisponibles[0] += oldmodel.NEntradas;
+                                }
                                 if (Number(entradasDisponibles[0]) < model.NEntradas) {
                                     alert("No hay suficientes butacas disponibles para la sesión solicitada");
                                     if (errcb) {

@@ -86,9 +86,25 @@ namespace Cine
             return Repositorio.List(idSesion);
         }
 
-        public VentasDTO Update(long idVenta, long sesion)
+        public VentasDTO Update(long idVenta, VentasDTO venta)
         {
-            return Repositorio.Update(idVenta, sesion);
+            VentasDTO antiguaVenta = Repositorio.Read(venta.VentaId);
+            if (antiguaVenta == null)
+            {
+                throw new Exception("Imposible actualizar entradas: No existe la venta a actualizar.");
+            }
+            if (!Repositorio.ReadSesion(venta.SesionId).Abierto) //Comprobamos si la sesión de destino se encuentra abierta.
+            {
+                throw new Exception("Imposible actualizar entradas: La sesión se encuentra cerrada.");
+            }   
+            if (!Repositorio.HayButacas(venta.NEntradas, venta.SesionId, antiguaVenta)) //Comprobamos si quedan butacas disponibles en la sesión de destino.
+            {
+                throw new Exception("Imposible actualizar entradas: No quedan butacas disponibles.");
+            }
+            venta.Precio = CalculaPrecio(venta);
+            Repositorio.Update(idVenta, venta);
+            venta.Cambio = venta.Precio - antiguaVenta.Precio;
+            return venta;
         }
 
         public VentasDTO Delete(long id)

@@ -14,7 +14,7 @@ namespace Cine
         public int NEntradas { get; set; } //Número total de entradas vendidas.
         public int NEntradasJoven { get; set; } //Número de entradas vendidas de carnet joven.
         public double Precio { get; set; } //Precio del total de la venta.
-
+        public double Cambio { get; set; }
         public VentasDTO() { }
 
         public VentasDTO(long sesionID, int numEntradas, int numEntradasJoven)

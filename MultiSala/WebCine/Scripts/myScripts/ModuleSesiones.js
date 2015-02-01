@@ -3,7 +3,7 @@
     _my.states["listadoSesionesSnippet"] = {
         title: "listado de Sesiones Seleccionadas",
         botones: [ _my.botones.btncorregir,_my.botones.btnvolver],
-        handlers: [function () { return _my.handlers.corregir(); }, function () { return _my.handlers.volverAlPrincipio(); }],
+        handlers: [function () { return _my.handlers.corregir(); }, function () { return _my.rutas.Index(); }],
         partialData: {
             items: null,
         }

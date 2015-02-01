@@ -198,29 +198,19 @@ namespace Cine
         //cambio de entradas,implica cambio de sesion
         //venta ya existente id distinto de menos uno update
         // Venta Update(int idVenta,Sesion sesion);
-        public VentasDTO Update(long idVenta, long idSesion)
+        public VentasDTO Update(long idVenta, VentasDTO venta)
         {
+            Venta nuevaVenta = ventaDTOtoVenta(venta);
             VentasDTO cambio = null;
-         
-            Sesion sesionDB = ReadSesion(idSesion);//Sesión de destino
-
-            if (sesionDB.Abierto) //Comprobamos si la sesión de destino se encuentra abierta.
+            using (var context = new DatosDB())
             {
-                if (ReadSesion(Read(idVenta).SesionId).Abierto) //Comprobamos si la sesión de origen se encuentra abierta.
-                {
-                    using (var context = new DatosDB())
-                    {
-                        Venta venta = context.Ventas.Find(idVenta);
+                Venta antiguaventa = context.Ventas.Find(idVenta);
+                context.Entry(antiguaventa).CurrentValues.SetValues(nuevaVenta);
+                context.SaveChanges();
+                cambio = ventaToDTO(antiguaventa);
 
-                        if (HayButacas(venta.NEntradas, idSesion)) //Comprobamos si quedan butacas disponibles en la sesión de destino.
-                        {
-                            venta.SesionID = idSesion;
-                            context.SaveChanges();
-                            cambio = ventaToDTO(venta);
-                        }
-                    }
-                }
             }
+             
             return cambio;//devuelve objeto cambiado si existia una venta con ese id sino un null
         }
 
@@ -379,10 +369,17 @@ namespace Cine
         //    return s;
         //}
 
-        public bool HayButacas(int butacas, long sesionID)
+        public bool HayButacas(int butacas, long sesionID, VentasDTO antiguaVenta = null)
         {
             int butacasVendidas = CalcularEntradasVendidasSesion(sesionID);
             //devuelve objeto sesion
+            if (antiguaVenta != null)
+            {
+                if (antiguaVenta.SesionId == sesionID)
+                {
+                    butacasVendidas -= antiguaVenta.NEntradas;
+                }
+            }
             Sesion sesiondb = ReadSesion(sesionID);
             long id = sesiondb.SalaId;
             int aforo = ReadSala(id).NButacas;

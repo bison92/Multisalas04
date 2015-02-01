@@ -59,7 +59,7 @@ var Module = (function (_my) {
     //// 
 
     _my.states = {};
-    
+
     // estado inicial
     _my.states["home"] = {
         title: "CyC",
@@ -107,10 +107,10 @@ var Module = (function (_my) {
             function () {
                 _my.handlers.CargarCrear("cambio");
             },
-            function() {
+            function () {
                 _my.rutas.venderPedirDatos();
             },
-            function() {
+            function () {
                 _my.rutas.Index();
             },
         ],
@@ -119,24 +119,27 @@ var Module = (function (_my) {
     // 1er estado listado sesiones
     _my.states["seleccionaSesion"] = {
         title: "Seleccione la Sesion",
-        botones: [_my.botones.btnversesion, _my.botones.btnvolver],
-        handlers: [function () { _my.handlers.SeleccionaSesion(); }, function () { _my.handlers.volveralprincipio() }],
+        botones: [
+            _my.botones.btnversesion,
+            _my.botones.btnvolver
+        ],
+        handlers: [
+            function () {
+                _my.handlers.SeleccionaSesion();
+            },
+            function () {
+                _my.rutas.Index();
+            }],
     };
 
     // handlers 
     // namespace para los manejadores de eventos, funciones que se ejecutan como resultado de los clicks/cambios del usuario en los controles de la aplicación.
 
-    _my.handlers = {};
+    _my.handlers = { };
 
-    _my.handlers.volverAlPrincipio = function () {
-       
-         _my.rutas.Index();
-     
-    }
+    // son los handlers de los botones de inicio ¬¬
 
-    // rutas 
-
-    _my.rutas = {};
+    _my.rutas = { };
     _my.rutas.Index = function () {
         $("#actions").html("");
         _my.render('home', 'home', function () {
@@ -146,10 +149,10 @@ var Module = (function (_my) {
         });
     };
     _my.rutas["venderPedirDatos"] = function () {
-        _my.states.venderPedirDatos.partialData = {};
+        _my.states.venderPedirDatos.partialData = { };
         _my.states.venderPedirDatos.partialData.items = [];
         _.each(_my.listadoSesiones, function (element, key) {
-            if (element.Abierto == true) {
+            if(element.Abierto == true) {
                 _my.states.venderPedirDatos.partialData.items.push(element);
             }
         });
@@ -165,7 +168,7 @@ var Module = (function (_my) {
 
     // helpers, aquí metemos los cargadores y descargadores.
 
-    _my.helpers = {};
+    _my.helpers = { };
     _my.helpers.descargaVentas = function (venta) {
         $("#ventaid").val(venta.VentaId),
         $("#sesionid").val(venta.SesionId),
@@ -192,7 +195,7 @@ var Module = (function (_my) {
         console.log("Render Call: view=" + view + "; action=" + state + "; data=" + JSON.stringify(dataorcb) + ";");
         var actualAction = _my.states[state] || null;
         var responseCallback = function (result) {
-            if (actualAction) {
+            if(actualAction) {
                 console.log("State :" + JSON.stringify(actualAction));
                 if (typeof (actualAction.partialData) != 'undefined' && actualAction.partialData != null) {
                     result = _.template(result)(actualAction.partialData);
@@ -236,7 +239,7 @@ var Module = (function (_my) {
             if (dataorcb) {
                 if (!_.isFunction(dataorcb)) {
                     if (dataorcb.Precio) {
-                        dataorcb.Precio = Number(dataorcb.Precio).toFixed(2)+"€";
+                        dataorcb.Precio = Number(dataorcb.Precio).toFixed(2) + "€";
                     }
                     if (typeof descargador === 'function') {
                         descargador(dataorcb);
@@ -255,8 +258,8 @@ var Module = (function (_my) {
             dataType: "html",
         });
     };
-   
+
     return _my;
 
 
-}(Module || {}));
+}(Module || { }));

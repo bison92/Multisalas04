@@ -10,7 +10,7 @@ namespace Cine
     {
         VentasDTO Create(VentasDTO venta);
         VentasDTO Read(long id);
-        VentasDTO Update(long idVenta, long idSesion);
+        VentasDTO Update(long id, VentasDTO venta);
         VentasDTO Delete(long id);
 
         IList<VentasDTO> List();
@@ -29,5 +29,7 @@ namespace Cine
         int CalcularEntradasVendidasSesion(long idSesion);
         int CalcularEntradasVendidasSala(long idSala, DateTime fecha);
         int EntradasDisponibles(long sesionID);
+
+        
     }
 }
