@@ -109,6 +109,8 @@ var Module = (function (_my) {
                 if (data.VentaId == 0) {
                     alert("No existe la venta con número: " + identificador);
                     $("#ventaid").val("");
+                    $("#btn-devolucion-venta").attr("disabled", false);
+                    $("#btn-cambiar").attr("disabled", false);
                 } else {
                     if (action == "devolucion") {
                         _my.render('venta', 'DatosDevolucion', data, _my.helpers.descargaVentas);
