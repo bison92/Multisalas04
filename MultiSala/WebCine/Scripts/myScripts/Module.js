@@ -1,12 +1,16 @@
 
 var Module = (function (_my) {
     // obtiene el listado de sesiones.
-    _my.listadoSesiones = new Array();
-    $.ajax('/api/sesion', {
-        success: function (data) {
-            _my.listadoSesiones = data;
-        },
-    });
+    _my.listadoSesiones = {};
+    _my.listadoSesiones.array = [];
+    _my.listadoSesiones.loadSesiones = function () {
+        $.ajax('/api/sesion', {
+            success: function (data) {
+                _my.listadoSesiones.array = data;
+            },
+        });
+    };
+    _my.listadoSesiones.loadSesiones();
     // constantes object 
     _my.constantes = {};
     _my.constantes.url = "/api/status"
@@ -88,6 +92,9 @@ var Module = (function (_my) {
                 _my.rutas.Index();
             },
         ],
+        partialData: {
+            items: [],
+        },
     };
     // 1er estado cambiar / devolver venta
     _my.states["cambioDevolucionPedirDatos"] = {
@@ -151,9 +158,9 @@ var Module = (function (_my) {
     _my.rutas["venderPedirDatos"] = function () {
 
         // procesamos las sesiones
-        _my.states.venderPedirDatos.partialData = {};
-        _my.states.venderPedirDatos.partialData.items = [];
-        _.each(_my.listadoSesiones, function (element, key) {
+        _my.listadoSesiones.loadSesiones();
+        _my.states.venderPedirDatos.partialData.items.length = 0;
+        _.each(_my.listadoSesiones.array, function (element, key) {
             if (element.Abierto == true) {
 
                 _my.states.venderPedirDatos.partialData.items.push(element);
