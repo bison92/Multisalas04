@@ -5,7 +5,7 @@
             <% _.each(items, function(item, key){ %>
             <option value="<%= item.SesionId %>"><%= item.SesionId %> : <%= item.fecha %></option>
             <% }); %>
-        </select></div>
+        </select>&nbsp;<span>Entradas Disponibles:&nbsp;<b id="nentradasdisponibles"></b>&nbsp;<button id="updatedisponibles">actualizar</button></span></div>
     <div><label for="nentradasjoven">Entradas carnet joven</label><input id="nentradasjoven" type="text"></div>
     <div><label for="nentradas">Entradas totales</label><input id="nentradas" type="text"></div>
     <div><label for="precio">Total</label><input id="precio" type="text"></div>

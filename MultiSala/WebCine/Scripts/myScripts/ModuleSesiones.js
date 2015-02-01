@@ -20,12 +20,6 @@
     _my.handlers.corregir = function () {
         alert("Demasiado para mi");
     }
-
-
-   
-
-  
-
     return _my;
 }
 

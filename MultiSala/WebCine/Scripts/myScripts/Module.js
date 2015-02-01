@@ -21,8 +21,8 @@ var Module = (function (_my) {
             dataType: "json",
             success: function (data) {
                 for (property in data) {
-                    if (_my.constantes.hasOwnProperty(property.toString())) {
-                        _my.constantes[property.toString()] = data[property];
+                    if (_my.constantes.hasOwnProperty(property)) {
+                        _my.constantes[property] = data[property];
                     }
                 }
             },
@@ -85,7 +85,7 @@ var Module = (function (_my) {
                 _my.handlers.limpiarVenta();
             },
             function () {
-                _my.handlers.volverAlPrincipio();
+                _my.rutas.Index();
             },
         ],
     };
@@ -135,11 +135,11 @@ var Module = (function (_my) {
     // handlers 
     // namespace para los manejadores de eventos, funciones que se ejecutan como resultado de los clicks/cambios del usuario en los controles de la aplicación.
 
-    _my.handlers = { };
+    _my.handlers = {};
 
     // son los handlers de los botones de inicio ¬¬
 
-    _my.rutas = { };
+    _my.rutas = {};
     _my.rutas.Index = function () {
         $("#actions").html("");
         _my.render('home', 'home', function () {
@@ -149,14 +149,34 @@ var Module = (function (_my) {
         });
     };
     _my.rutas["venderPedirDatos"] = function () {
-        _my.states.venderPedirDatos.partialData = { };
+
+        // procesamos las sesiones
+        _my.states.venderPedirDatos.partialData = {};
         _my.states.venderPedirDatos.partialData.items = [];
         _.each(_my.listadoSesiones, function (element, key) {
-            if(element.Abierto == true) {
+            if (element.Abierto == true) {
+
                 _my.states.venderPedirDatos.partialData.items.push(element);
             }
         });
-        _my.render('preVenta', 'venderPedirDatos');
+        _my.render('preVenta', 'venderPedirDatos', function () {
+            $.when(function () { return _my.helpers.entradasDisponibles($("#sesionid").val()); }()).then(function (disponibles) {
+                $("#nentradasdisponibles").text(disponibles); // primera cargar
+                $("#sesionid").change(function () {
+                    $.when(function () { return _my.helpers.entradasDisponibles($("#sesionid").val()); }()).then(function (disponibles) {
+                        $("#nentradasdisponibles").text(disponibles); // el resto de cambios.
+                    });
+                });
+                $("#updatedisponibles").click(function () {
+                    $("#updatedisponibles").attr("disabled", true);
+                    $.when(function () { return _my.helpers.entradasDisponibles($("#sesionid").val()); }()).then(function (disponibles) {
+                        $("#nentradasdisponibles").text(disponibles);
+                        $("#updatedisponibles").attr("disabled", false);
+                    });
+                });
+            });
+
+        });
     }
 
     _my.rutas["cambioDevolucionPedirDatos"] = function () {
@@ -168,7 +188,7 @@ var Module = (function (_my) {
 
     // helpers, aquí metemos los cargadores y descargadores.
 
-    _my.helpers = { };
+    _my.helpers = {};
     _my.helpers.descargaVentas = function (venta) {
         $("#ventaid").val(venta.VentaId),
         $("#sesionid").val(venta.SesionId),
@@ -189,13 +209,33 @@ var Module = (function (_my) {
 
     //render
     // la función render toma una vista, un estado y datos obtenidos a través de una petición AJAX para renderizar un formulario cargado.
-    // el único parámetro obligatorio es la vista.
+    // el único parámetro obligatorio es la vista. Con ayuda de esta función nos podremos centrar en definir estados y transiciones dejando la parte del 
     // el parametro de estado contiene la información del estado de la pantalla, los botones y sus acciones, el título, el estado de los inputs (disabled)
+    // el tercer parámetro es el JSON resultante de la petición AJAX desde la que llamamos a render, o bien el callback que se ejecutará cuando se complete el procesado de render.
+    // el cuarto parámetro es la función utilizada para descargar los datos JSON a los inputs correspondientes var descargador = function(data) { $("#id").val(data.id); ...; };
+    // el quinto parámetro es el callback que se ejecutará cuando se complete el procesado.
+    // EJEMPLOS de _my.render SIN DATOS JSON.
+    // _my.render('vista', 'estadovista');
+    // _my.render('vista', 'estadovista', function() {
+    //    $("#justRederedInput").change(...);
+    // };
+    // EJEMPLO de uso CON DATOS JSON obtenidos mediante una petición ajax.
+    // _my.helpers.descargador = function(data) { $("#id").val(data.id); ...; };
+    // $.ajax({
+    //    type: "get",
+    //    url: "/api/resource"
+    //    dataType: "json",
+    //    success: function(data) {
+    //        _my.render('vista', 'estadovista', data, _my.helpers.descargador, function(){
+    //          alert("complete :)");
+    //        });
+    //    },
+    // });
     _my.render = function (view, state, dataorcb, descargador, cb) {
         console.log("Render Call: view=" + view + "; action=" + state + "; data=" + JSON.stringify(dataorcb) + ";");
         var actualAction = _my.states[state] || null;
         var responseCallback = function (result) {
-            if(actualAction) {
+            if (actualAction) {
                 console.log("State :" + JSON.stringify(actualAction));
                 if (typeof (actualAction.partialData) != 'undefined' && actualAction.partialData != null) {
                     result = _.template(result)(actualAction.partialData);
@@ -262,4 +302,4 @@ var Module = (function (_my) {
     return _my;
 
 
-}(Module || { }));
+}(Module || {}));

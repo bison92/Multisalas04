@@ -1,26 +1,60 @@
-﻿var Module = (function (_my) {
+var Module = (function (_my) {
 
     _my.states["DatosDevolucion"] = {
         title: "Datos Devolucion",
         disabled: [true, true, true, true, true],
-        botones: [_my.botones.btnconfirmardevolucion, _my.botones.btncomprar, _my.botones.btncancelar],
-        handlers: [function () { _my.handlers.ConfirmarDevolucion(); }, function () { _my.rutas.venderPedirDatos(); }, function () { _my.rutas.cambioDevolucionPedirDatos() }],
+        botones: [
+            _my.botones.btnconfirmardevolucion,
+            _my.botones.btncomprar,
+            _my.botones.btncancelar
+        ],
+        handlers: [
+            function () {
+                _my.handlers.ConfirmarDevolucion();
+            },
+            function () {
+                _my.rutas.venderPedirDatos();
+            },
+            function () {
+                _my.rutas.cambioDevolucionPedirDatos()
+            }
+        ],
 
     };
 
     _my.states["ConfirmarDevolucion"] = {
         title: "Venta Devuelta",
-        botones: [_my.botones.btnvolver, _my.botones.btncomprar],
-        handlers: [function () { _my.rutas.Index(); }, function () { _my.rutas.venderPedirDatos(); }, ],
         hidden: [true, true, true, true],
         disabled: [true, true, true, true, true],
+        botones: [
+            _my.botones.btnvolver,
+            _my.botones.btncomprar
+        ],
+        handlers: [
+            function () {
+                _my.rutas.Index();
+            },
+            function () {
+                _my.rutas.venderPedirDatos();
+            },
+        ],
     };
 
     _my.states["DatosCambio"] = {
         title: "Efectue los cambios",
         disabled: [true, false, false, false, true],
-        botones: [_my.botones.btncambiar, _my.botones.btnvolver],
-        handlers: [function () { _my.handlers.ComprobarCambio(); }, function () { _my.rutas.cambioDevolucionPedirDatos(); }, ],
+        botones: [
+            _my.botones.btncambiar,
+            _my.botones.btnvolver
+        ],
+        handlers: [
+            function () {
+                _my.handlers.ComprobarCambio();
+            },
+            function () {
+                _my.rutas.cambioDevolucionPedirDatos();
+            },
+        ],
     };
 
     _my.states["ConfirmarCambio"] = {
@@ -46,9 +80,19 @@
     };
     _my.states["CambioConfirmado"] = {
         title: "Cambios confirmados",
-        botones: [_my.botones.btnvolver, _my.botones.btncomprar],
-        handlers: [function () { _my.rutas.Index(); }, function () { _my.rutas.venderPedirDatos(); }, ],
         disabled: [true, true, true, true, true],
+        botones: [
+            _my.botones.btnvolver,
+            _my.botones.btncomprar
+        ],
+        handlers: [
+            function () {
+                _my.rutas.Index();
+            },
+            function () {
+                _my.rutas.venderPedirDatos();
+            },
+        ],
     };
 
 
@@ -125,7 +169,7 @@
         _my.render('venta', 'DatosCambio', model, _my.helpers.descargaVentas);
     }
     _my.handlers.ConfirmarCambio = function () {
-        $("#btndevolucionventa").attr("disabled", true);
+        $("#btn-confirmarcambio").attr("disabled", true);
         var identificador = $("#ventaid").val();
         var model = _my.helpers.cargaVentas();
         if (confirm("¿Seguro que desea confirmar los cambios de la venta #" + identificador + "?")) {
@@ -143,8 +187,6 @@
                     _my.handlers.CorregirCambio();
                 },
             });
-        } else {
-
         }
     }
     return _my;

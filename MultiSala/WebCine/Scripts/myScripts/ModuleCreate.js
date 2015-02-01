@@ -1,5 +1,5 @@
 var Module = (function (_my) {
-    // metodos pricados de validación y cálculo de precio.
+    // metodos de validación y cálculo de precio.
     _my.helpers.calculaPrecio = function(model){
         if(_my.constantes.Precio == 0){
             _my.constantes.loadStatus();
@@ -35,7 +35,7 @@ var Module = (function (_my) {
         }
         return valido;
     };
-    var validaButacas = function (sesionId) {
+    _my.helpers.entradasDisponibles = function (sesionId) {
         return $.ajax({
             type: "get",
             url: "/api/venta/entradasDisponibles/" + sesionId,
@@ -94,7 +94,7 @@ var Module = (function (_my) {
 
     _my.helpers.comprobarVenta = function (model, cb, errcb, oldmodel) {
         if (validaFormulario(model)) {
-            $.when(validaSesionAbierta(model.SesionId), validaButacas(model.SesionId))
+            $.when(validaSesionAbierta(model.SesionId), _my.helpers.entradasDisponibles(model.SesionId))
                 .then(function (sesion, entradasDisponibles) {
                     if (sesion[1] == "success") {
                         if (sesion[0].Abierto) {
@@ -103,7 +103,7 @@ var Module = (function (_my) {
                                     entradasDisponibles[0] += oldmodel.NEntradas;
                                 }
                                 if (Number(entradasDisponibles[0]) < model.NEntradas) {
-                                    alert("No hay suficientes butacas disponibles para la sesión solicitada");
+                                    alert("No hay suficientes butacas disponibles para la sesión solicitada (quedan "+entradasDisponibles[0]+" butacas disponibles)");
                                     if (errcb) {
                                         errcb();
                                     }
