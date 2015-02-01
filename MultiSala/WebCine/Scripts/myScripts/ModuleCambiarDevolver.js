@@ -27,15 +27,15 @@ var Module = (function (_my) {
         hidden: [true, true, true, true],
         disabled: [true, true, true, true, true],
         botones: [
+            _my.botones.btncomprar,
             _my.botones.btnvolver,
-            _my.botones.btncomprar
         ],
         handlers: [
             function () {
-                _my.rutas.Index();
+                _my.rutas.venderPedirDatos();
             },
             function () {
-                _my.rutas.venderPedirDatos();
+                _my.rutas.Index();
             },
         ],
     };
@@ -131,7 +131,7 @@ var Module = (function (_my) {
     _my.handlers.ConfirmarDevolucion = function () {
         $("#btndevolucionventa").attr("disabled", true);
         var identificador = $("#ventaid").val();
-        if (confirm("¿Seguro que desea devolver la venta #" + identificador + "?")) {
+        if (window.confirm("¿Seguro que desea devolver la venta #" + identificador + "?")) {
             $.post("../../api/venta/devolverVenta/" + identificador).done(function (data) {
                 send = {
                     Precio: data,

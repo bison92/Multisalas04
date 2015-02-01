@@ -4,13 +4,12 @@ var Module = (function (_my) {
     _my.listadoSesiones = {};
     _my.listadoSesiones.array = [];
     _my.listadoSesiones.loadSesiones = function () {
-        $.ajax('/api/sesion', {
-            success: function (data) {
-                _my.listadoSesiones.array = data;
-            },
+        return $.ajax({
+            url: "/api/sesion",
+            type: "get",
+            dataType: "json",
         });
     };
-    _my.listadoSesiones.loadSesiones();
     // constantes object 
     _my.constantes = {};
     _my.constantes.url = "/api/status"
@@ -158,32 +157,35 @@ var Module = (function (_my) {
     _my.rutas["venderPedirDatos"] = function () {
 
         // procesamos las sesiones
-        _my.listadoSesiones.loadSesiones();
-        _my.states.venderPedirDatos.partialData.items.length = 0;
-        _.each(_my.listadoSesiones.array, function (element, key) {
-            if (element.Abierto == true) {
-
-                _my.states.venderPedirDatos.partialData.items.push(element);
-            }
-        });
-        _my.render('preVenta', 'venderPedirDatos', function () {
-            $.when(function () { return _my.helpers.entradasDisponibles($("#sesionid").val()); }()).then(function (disponibles) {
-                $("#nentradasdisponibles").text(disponibles); // primera cargar
-                $("#sesionid").change(function () {
-                    $.when(function () { return _my.helpers.entradasDisponibles($("#sesionid").val()); }()).then(function (disponibles) {
-                        $("#nentradasdisponibles").text(disponibles); // el resto de cambios.
-                    });
+        $("#btn-create-venta").attr("disabled", true);
+        $.when(function () { return _my.listadoSesiones.loadSesiones(); }()).then(
+            function (data) {
+                _my.listadoSesiones.array = data;
+                _my.states.venderPedirDatos.partialData.items.length = 0;
+                _.each(_my.listadoSesiones.array, function (element, key) {
+                    if (element.Abierto == true) {
+                        _my.states.venderPedirDatos.partialData.items.push(element);
+                    }
                 });
-                $("#updatedisponibles").click(function () {
-                    $("#updatedisponibles").attr("disabled", true);
+                _my.render('preVenta', 'venderPedirDatos', function () {
                     $.when(function () { return _my.helpers.entradasDisponibles($("#sesionid").val()); }()).then(function (disponibles) {
-                        $("#nentradasdisponibles").text(disponibles);
-                        $("#updatedisponibles").attr("disabled", false);
+                        $("#nentradasdisponibles").text(disponibles); // primera cargar
+                        $("#sesionid").change(function () {
+                            $.when(function () { return _my.helpers.entradasDisponibles($("#sesionid").val()); }()).then(function (disponibles) {
+                                $("#nentradasdisponibles").text(disponibles); // el resto de cambios.
+                            });
+                        });
+                        $("#updatedisponibles").click(function () {
+                            $("#updatedisponibles").attr("disabled", true);
+                            $.when(function () { return _my.helpers.entradasDisponibles($("#sesionid").val()); }()).then(function (disponibles) {
+                                $("#nentradasdisponibles").text(disponibles);
+                                $("#updatedisponibles").attr("disabled", false);
+                            });
+                        });
                     });
+
                 });
             });
-
-        });
     }
 
     _my.rutas["cambioDevolucionPedirDatos"] = function () {

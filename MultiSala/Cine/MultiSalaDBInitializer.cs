@@ -26,15 +26,15 @@ namespace Cine
             defaultSesions.Add(new Sesion() { SesionId = 2, Abierto = false, fecha = new DateTime(2015, 5, 12, 19, 30, 0),SalaId = 1 });
             defaultSesions.Add(new Sesion() { SesionId = 3, Abierto = false, fecha = new DateTime(2015, 5, 12, 22, 00, 0),SalaId= 1 });
             defaultSesions.Add(new Sesion() { SesionId = 4, Abierto = false, fecha = new DateTime(2015, 5, 12, 17, 00, 0),SalaId= 2 });
-            defaultSesions.Add(new Sesion() { SesionId = 5, Abierto = false, fecha = new DateTime(2015, 5, 12, 19, 00, 0),SalaId= 2 });
-            defaultSesions.Add(new Sesion() { SesionId = 6, Abierto = false, fecha = new DateTime(2015, 5, 12, 22, 00, 0),SalaId= 2 });
+            defaultSesions.Add(new Sesion() { SesionId = 5, Abierto = true, fecha = new DateTime(2015, 5, 12, 19, 00, 0),SalaId= 2 });
+            defaultSesions.Add(new Sesion() { SesionId = 6, Abierto = true, fecha = new DateTime(2015, 5, 12, 22, 00, 0),SalaId= 2 });
             defaultSesions.Add(new Sesion() { SesionId = 7, Abierto = false, fecha = new DateTime(2015, 5, 12, 17, 00, 0),SalaId= 3 });
-            defaultSesions.Add(new Sesion() { SesionId = 8, Abierto = false, fecha = new DateTime(2015, 5, 12, 19, 30, 0),SalaId= 3 });
+            defaultSesions.Add(new Sesion() { SesionId = 8, Abierto = true, fecha = new DateTime(2015, 5, 12, 19, 30, 0),SalaId= 3 });
             defaultSesions.Add(new Sesion() { SesionId = 9, Abierto = false, fecha = new DateTime(2015, 5, 12, 22, 30, 0),SalaId= 3 });
                                                                                                                         
             defaultSesions.Add(new Sesion() { SesionId = 10, Abierto = false, fecha = new DateTime(2015, 5, 13, 17, 30, 0),SalaId = 1 });
             defaultSesions.Add(new Sesion() { SesionId = 11, Abierto = false, fecha = new DateTime(2015, 5, 13, 19, 30, 0),SalaId = 1 });
-            defaultSesions.Add(new Sesion() { SesionId = 12, Abierto = false, fecha = new DateTime(2015, 5, 14, 01, 00, 0),SalaId = 1 });
+            defaultSesions.Add(new Sesion() { SesionId = 12, Abierto = true, fecha = new DateTime(2015, 5, 14, 01, 00, 0),SalaId = 1 });
             defaultSesions.Add(new Sesion() { SesionId = 13, Abierto = false, fecha = new DateTime(2015, 5, 13, 17, 00, 0),SalaId = 2 });
             defaultSesions.Add(new Sesion() { SesionId = 14, Abierto = false, fecha = new DateTime(2015, 5, 13, 19, 00, 0),SalaId = 2 });
             defaultSesions.Add(new Sesion() { SesionId = 15, Abierto = false, fecha = new DateTime(2015, 5, 13, 22, 00, 0),SalaId = 2 });

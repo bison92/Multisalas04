@@ -108,8 +108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\ValuesControllerTest.cs" />
-    <Compile Include="TestComprarZ.cs" />
-    <Compile Include="TestCrearVenta.cs" />
+    <Compile Include="TestVenta.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

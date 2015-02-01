@@ -69,7 +69,7 @@ var Module = (function (_my) {
                 _my.handlers.limpiarVenta();
             },
             function () {
-                _my.handlers.volverAlPrincipio();
+                _my.rutas.Index();
             },
         ],
     };
